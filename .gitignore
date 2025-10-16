@@ -6,7 +6,9 @@
 *.swp
 .buildlog/
 .history
-
+.DS_Store
+.idea/
+.vscode/
 
 
 # Flutter repo-specific
