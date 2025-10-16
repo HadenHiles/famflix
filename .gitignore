@@ -10,6 +10,9 @@
 .idea/
 .vscode/
 
+# Local env overrides (if used later)
+lib/env/env.local.dart
+
 
 # Flutter repo-specific
 /bin/cache/
