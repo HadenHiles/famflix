@@ -8,6 +8,7 @@ import 'models/media_item.dart';
 RouterConfig<Object> createRouter() {
   return RouterConfig(
     routerDelegate: _FamFlixRouterDelegate(),
+    routeInformationProvider: PlatformRouteInformationProvider(initialRouteInformation: RouteInformation(uri: Uri.parse('/'))),
     routeInformationParser: _FamFlixRouteParser(),
   );
 }
@@ -19,8 +20,7 @@ class _RoutePath {
   _RoutePath(this.name, {this.params});
 }
 
-class _FamFlixRouterDelegate extends RouterDelegate<_RoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<_RoutePath> {
+class _FamFlixRouterDelegate extends RouterDelegate<_RoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<_RoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -32,14 +32,9 @@ class _FamFlixRouterDelegate extends RouterDelegate<_RoutePath>
       key: navigatorKey,
       pages: [
         const MaterialPage(child: HomeScreen()),
-        if (_current.name == 'search')
-          const MaterialPage(child: SearchScreen()),
-        if (_current.name == 'profile')
-          const MaterialPage(child: ProfileScreen()),
-        if (_current.name == 'details' && _current.params?['item'] != null)
-          MaterialPage(
-            child: DetailsScreen(item: _current.params!['item'] as MediaItem),
-          ),
+        if (_current.name == 'search') const MaterialPage(child: SearchScreen()),
+        if (_current.name == 'profile') const MaterialPage(child: ProfileScreen()),
+        if (_current.name == 'details' && _current.params?['item'] != null) MaterialPage(child: DetailsScreen(item: _current.params!['item'] as MediaItem)),
       ],
       onDidRemovePage: (page) {
         _current = _RoutePath('home');
@@ -77,9 +72,7 @@ class _FamFlixRouterDelegate extends RouterDelegate<_RoutePath>
 
 class _FamFlixRouteParser extends RouteInformationParser<_RoutePath> {
   @override
-  Future<_RoutePath> parseRouteInformation(
-    RouteInformation routeInformation,
-  ) async {
+  Future<_RoutePath> parseRouteInformation(RouteInformation routeInformation) async {
     final uri = routeInformation.uri;
     if (uri.pathSegments.isEmpty) return _RoutePath('home');
     switch (uri.pathSegments[0]) {
